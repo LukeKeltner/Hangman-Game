@@ -1,3 +1,10 @@
+var words = ['hello', 'apple', 'mouse', 'coffee', 'lantern', 'mug', 'sausage'];
+var correctLettersGuessed = 0;
+var currentWord = [];
+var guesses = 12;
+var wins = 0;
+var guessedLetters = []
+var letters;
 
 function write(id, content, join)
 {
@@ -16,10 +23,19 @@ function colorOfAlreadyGuessed(color)
 	write('alreadyGuessed', changeColor, false)
 }
 
-function resetGame()
+function clearEverything()
+{
+	correctLettersGuessed = 0;
+	currentWord = [];
+	guesses = 12;
+	guessedLetters = []
+	letters;
+	write('userGuesses', "", false);
+}
+
+function resetGame(numberOfWins)
 {
 	//Setting up word bank and picking one at random.
-	var words = ['hello', 'apple', 'mouse', 'coffee', 'lantern', 'mug', 'sausage'];
 	var index = Math.floor(Math.random() * words.length);
 	var wordToGuess = words[index];
 	write('test', wordToGuess, false); //Showing the word the computer picked for debugging purposes.
@@ -27,11 +43,9 @@ function resetGame()
 	//Splitting up the word into its individual letters - letters is an array of letters.
 	//We're also setting up a boolean correctLettersGuessed to keep track of when/if the users wins.
 	//The user wins when correctLettersGuessed = letter.length.
-	var correctLettersGuessed = 0;
-	var letters = wordToGuess.split("");
+	letters = wordToGuess.split("");
 
 	//Defining the Current Word array, intially set to all blank letters. This is the array that will change as the user makes guesses.
-	var currentWord = [];
 	for (var i=0; i<letters.length; i++)
 	{
 		currentWord.push('____');
@@ -39,39 +53,14 @@ function resetGame()
 	write('currentWord', currentWord, true)
 
 	//Declaring variables and setting their intial values.
-	var guesses = 12;
 	write('guesses', guesses, false);
-	var guessedLetters = []
+	write('wins', numberOfWins, false);
 }
 
-//Setting up word bank and picking one at random.
-var words = ['hello', 'apple', 'mouse', 'coffee', 'lantern', 'mug', 'sausage'];
-var index = Math.floor(Math.random() * words.length);
-var wordToGuess = words[index];
-write('test', wordToGuess, false); //Showing the word the computer picked for debugging purposes.
-
-//Splitting up the word into its individual letters - letters is an array of letters.
-//We're also setting up a boolean correctLettersGuessed to keep track of when/if the users wins.
-//The user wins when correctLettersGuessed = letter.length.
-var correctLettersGuessed = 0;
-var letters = wordToGuess.split("");
-
-//Defining the Current Word array, intially set to all blank letters. This is the array that will change as the user makes guesses.
-var currentWord = [];
-for (var i=0; i<letters.length; i++)
+if (wins==0)
 {
-	currentWord.push('____');
+	resetGame(0);
 }
-write('currentWord', currentWord, true)
-
-//Declaring variables and setting their intial values.
-var guesses = 12;
-var wins = 0;
-write('guesses', guesses, false);
-write('wins', wins, false);
-
-//Declaring an array to keep track of what letters the user has guessed.
-var guessedLetters = []
 
 //The events that occur when the User presses a key.
 document.onkeyup = function(event)
@@ -138,6 +127,7 @@ document.onkeyup = function(event)
 	{
 		wins = wins + 1;
 		write('wins', wins, false);
-		resetGame();
+		clearEverything();
+		resetGame(wins);
 	}
 }

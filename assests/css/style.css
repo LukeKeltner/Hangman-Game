@@ -1,0 +1,41 @@
+.jumbotron
+{
+	position: relative;
+}
+
+.placeGuesses
+{
+	position: absolute;
+	top:5%;
+	left:8%;
+	font-size: 30px;
+}
+
+.placeWins
+{
+	position: absolute;
+	top:5%;
+	right:8%;
+	font-size: 30px;
+}
+
+#currentWord
+{
+	font-size: 30px;
+}
+
+h2
+{
+	border-bottom: 1px solid gray;
+}
+
+#userGuesses
+{
+	font-size: 30px;
+}
+
+#alreadyGuessed
+{
+	font-style: 30px;
+	color:blue;
+}

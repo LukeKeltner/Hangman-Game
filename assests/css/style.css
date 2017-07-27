@@ -1,3 +1,8 @@
+body
+{
+	font-size: 30px;
+}
+
 .jumbotron
 {
 	position: relative;
@@ -41,7 +46,14 @@ h2
 
 #guesses, 
 #wins, 
-#losses
+#losses,
+#previousWord
 {
 	font-size: 30px;
+}
+
+img
+{
+	display: inline;
+	width:10%;
 }

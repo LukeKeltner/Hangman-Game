@@ -12,9 +12,7 @@
 	<body>
 		<div class="container text-center">
 			<div class="jumbotron">
-				<div class="placeGuesses">Guesses: <span id="guesses"></span></div>
-				<div class="placeWins">Wins: <span id="wins"></span></div>
-				<h1>The Current Word</h1><br>
+				<h1>Guess the Word</h1><br>
 				<h1 id="currentWord"></h1>
 			</div>
 		</div>
@@ -22,14 +20,27 @@
 
 		<div class="container">
 			<div class="row">
-				<div class="col-xs-12 col-md-6">
-					<h2>What You've Guessed:<span id="alreadyGuessed"> Already Guessed</span></h2>
-					<p id="userGuesses"></p>
-					
+				<div class="col-xs-12 col-md-6 text-center">
+					<h2>What You've Guessed</h2>
+					<!--<span id="alreadyGuessed"> Already Guessed</span>-->
+					<p id="userGuesses"></p>			
 				</div>
-
 				<div class="col-xs-12 col-md-6">
-					
+					<div class="container-fluid">
+						<div class="row">
+							<div class="col-xs-4 text-center"><h2 class="placeGuesses">Guesses</h2><p id="guesses"></p></div>
+							<div class="col-xs-4 text-center"><h2 class="placeWins">Wins</h2><p id="wins"></p></div>
+							<div class="col-xs-4 text-center"><h2 class="placeLosses">Losses</h2><p id="losses"></p></div>
+						</div>	
+					</div>
+				</div>
+			</div>
+
+			<div class="row">
+				<div class="col-xs-12 col-md-6 text-center">
+				</div>
+				<div class="col-xs-12 col-md-6 text-center">
+				<h2 class="lastWord">Previous Word</h2>
 				</div>
 			</div>
 		</div>

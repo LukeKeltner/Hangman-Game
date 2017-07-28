@@ -29,6 +29,14 @@ var letters;
 var wordToGuess;
 var previousWord;
 
+var correct = new Audio('correct.wav');
+var wrong = new Audio('wrong.wav')
+var youwin = new Audio('youwin.wav')
+var youlose = new Audio('youlose.wav')
+var ohno = new Audio('ohno.wav')
+
+var jumbotronText = document.getElementsByClassName('changeColor');
+
 //This is a function that just makes it easier to write things to the document.  The "join" boolean is there to print arrays without commas.
 function write(id, content, join)
 {
@@ -58,6 +66,10 @@ function clearEverything()
 	guesses = 12;
 	guessedLetters = []
 	write('userGuesses', "", false);
+	ohno.pause()
+	ohno.currentTime = 0;
+	document.body.style.background = 'white'
+	document.body.style.color = 'black';
 }
 
 
@@ -85,11 +97,7 @@ function startGame(numberOfWins, numberOfLosses)
 	write('losses', numberOfLosses, false);
 }
 
-//If this is the first time playing
-if (wins==0)
-{
-	startGame(0, 0);
-}
+startGame(0, 0);
 
 //The events that occur when the User presses a key.
 document.onkeyup = function(event)
@@ -137,7 +145,7 @@ document.onkeyup = function(event)
 			currentWord.splice(i, 1, guessedLetter);
 			write('currentWord', currentWord, true);
 			correctLettersGuessed = correctLettersGuessed + 1
-			console.log(correctLettersGuessed)
+			correct.play()
 		}
 	}
 
@@ -149,6 +157,22 @@ document.onkeyup = function(event)
 		{
 			guesses = guesses - 1;
 			write('guesses', guesses, false);
+
+			//We don't want the wrong sound to play overtop the you lose sound (it sounds awful)
+			if (guesses != 0)
+			{
+				wrong.play()
+			}
+
+			//Suspense if you have three or less guesses!
+			if (guesses == 3)
+			{
+				ohno.play()
+				document.body.style.background = 'black';
+				document.body.style.color = 'white';
+				jumbotronText[0].style.color = 'black';
+				jumbotronText[1].style.color = 'black';
+			}
 		}
 	}
 
@@ -157,6 +181,7 @@ document.onkeyup = function(event)
 	{
 		wins = wins + 1;
 		write('wins', wins, false);
+		youwin.play()
 		clearEverything();
 		startGame(wins, losses);
 	}
@@ -166,6 +191,7 @@ document.onkeyup = function(event)
 	{
 		losses = losses + 1;
 		write('losses', losses, false);
+		youlose.play()
 		clearEverything();
 		startGame(wins, losses);
 	}

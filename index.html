@@ -19,41 +19,51 @@
 			</div>
 		</div>
 
+		<div class="container">
+			<div class="row">
+
+				<div class="col-xs-12 text-center">
+					<div class="col-xs-4 text-center"><h2 class="placeGuesses">Guesses</h2><p id="guesses"></p></div>
+					<div class="col-xs-4 text-center"><h2 class="placeWins">Wins</h2><p id="wins"></p></div>
+					<div class="col-xs-4 text-center"><h2 class="placeLosses">Losses</h2><p id="losses"></p></div>
+				</div>
+
+			</div>
+		</div>
+
 
 		<div class="container">
 			<div class="row">
-				<div class="col-xs-12 col-md-6 text-center">
-					<h2>What You've Guessed</h2>
-					<!--<span id="alreadyGuessed"> Already Guessed</span>-->
-					<p id="userGuesses"></p>			
-				</div>
-				<div class="col-xs-12 col-md-6">
-					<div class="container-fluid">
-						<div class="row">
-							<div class="col-xs-4 text-center"><h2 class="placeGuesses">Guesses</h2><p id="guesses"></p></div>
-							<div class="col-xs-4 text-center"><h2 class="placeWins">Wins</h2><p id="wins"></p></div>
-							<div class="col-xs-4 text-center"><h2 class="placeLosses">Losses</h2><p id="losses"></p></div>
-						</div>	
-					</div>
-				</div>
-			</div>
 
-			<div class="row">
 				<div class="col-xs-12 col-md-6 text-center">
-					<h2>Previous Word</h2>
-					<p id="previousWord"></p>
+
+					<div class="container-fluid">
+						<div class="row">	
+							<h2>Previous Word</h2>
+							<p id="previousWord">Play a game!</p>
+						</div>
+					</div>	
+
+					<div class="container-fluid">
+						<div class="row">	
+							<h2>What You've Guessed</h2>
+							<!--<span id="alreadyGuessed"> Already Guessed</span>-->
+							<p id="userGuesses"></p>
+						</div>
+					</div>	
 				</div>
-				<div class="col-xs-12 col-md-6 text-center">
-					<div id="chartContainer" style="height: 100%px; width: 100%;"></div>
+
+				<div class="col-xs-12 col-md-6">
+					<div id="chartContainer" class="text-center"></div>	
 				</div>
 			</div>
 		</div>
 
 
 
-		<h1> The word is <h1 id="test"></h1></h1>
+		<!--<h1> The word is <h1 id="test"></h1></h1>
 
-		<h1 id="split"></h1>
+		<h1 id="split"></h1>-->
 
 
 
@@ -62,6 +72,5 @@
 
 
 		<script type="text/javascript" src="script.js"></script>
-		<!--<script src="https://canvasjs.com/assets/script/canvasjs.min.js"></script>-->
 
 	</body>

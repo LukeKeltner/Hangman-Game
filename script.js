@@ -7,6 +7,9 @@ var words = ["abettor","abettors","abridgment","abridgments","accessorize","acce
 //The user wins when correctLettersGuessed = letters.length.
 var correctLettersGuessed = 0;
 
+var totalLettersCorrect = 0;
+var totalLettersWrong = 0;
+
 //This will be an array of the letters in the word that is to be guessed.
 var currentWord = [];
 
@@ -64,8 +67,10 @@ function makePie()
 	var chart = new CanvasJS.Chart("chartContainer",
 	{
 		backgroundColor: null,
-		theme: "theme2",
-		title:{		},
+		theme: "theme1",
+		title:{
+			text:''
+		    },
 		data: [
 		{
 			type: "pie",
@@ -73,8 +78,8 @@ function makePie()
 			toolTipContent: "{y} - #percent %",
 			legendText: "{indexLabel}",
 			dataPoints: [
-				{  y: wins, indexLabel: "Wins" },
-				{  y: losses, indexLabel: "Losses" },
+				{  y: totalLettersCorrect, indexLabel: "Guessed Correctly" },
+				{  y: totalLettersWrong, indexLabel: "Guessed Incorrectly" },
 			]
 		}
 		]
@@ -82,7 +87,7 @@ function makePie()
 	chart.render();
 }
 
-//A function that makes all initial variables back to their original values expect for wins and losses numbers.
+//A function that makes all initial variables back to their original values expect for wins and losses numbers and total letters guessed correctly and incorrectly.
 function clearEverything()
 {
 	previousWord = wordToGuess;
@@ -105,12 +110,10 @@ function clearEverything()
 //The initiation of the game
 function startGame(numberOfWins, numberOfLosses)
 {
-
-	makePie()
 	//Picking a word at random from the word bank.
 	var index = Math.floor(Math.random() * words.length);
 	wordToGuess = words[index];
-	write('test', wordToGuess, false); //Showing the word the computer picked for debugging purposes.
+	//write('test', wordToGuess, false); //Showing the word the computer picked for debugging purposes.
 
 	//Splitting up the word into its individual letters - letters is an array of letters.
 	letters = wordToGuess.split("");
@@ -175,7 +178,9 @@ document.onkeyup = function(event)
 			correctGuess = true;
 			currentWord.splice(i, 1, guessedLetter);
 			write('currentWord', currentWord, true);
-			correctLettersGuessed = correctLettersGuessed + 1
+			correctLettersGuessed = correctLettersGuessed + 1;
+			totalLettersCorrect = totalLettersCorrect + 1;
+			makePie()
 			correct.play()
 		}
 	}
@@ -187,6 +192,8 @@ document.onkeyup = function(event)
 		if (alreadyGuessed==false)
 		{
 			guesses = guesses - 1;
+			totalLettersWrong = totalLettersWrong + 1;
+			makePie()
 			write('guesses', guesses, false);
 
 			//We don't want the wrong sound to play overtop the you lose sound (it sounds awful)

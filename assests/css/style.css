@@ -1,11 +1,14 @@
 body
 {
 	font-size: 30px;
+	margin-top:70px;
+	font-family: Chalkboard, ‘Comic Sans’, sans-serif
 }
 
 .jumbotron
 {
 	position: relative;
+	background-color: #70a6ff;
 }
 
 .placeGuesses

@@ -35,7 +35,9 @@ var youwin = new Audio('youwin.wav')
 var youlose = new Audio('youlose.wav')
 var ohno = new Audio('ohno.wav')
 
+var jumbotron = document.getElementsByClassName('jumbotron');
 var jumbotronText = document.getElementsByClassName('changeColor');
+var changeGuessesLook = document.getElementById('guesses');
 
 //This is a function that just makes it easier to write things to the document.  The "join" boolean is there to print arrays without commas.
 function write(id, content, join)
@@ -56,6 +58,30 @@ function colorOfAlreadyGuessed(color)
 	write('alreadyGuessed', changeColor, false)
 }
 
+//Creates Pie Chart of wins and losses
+function makePie() 
+{
+	var chart = new CanvasJS.Chart("chartContainer",
+	{
+		backgroundColor: null,
+		theme: "theme2",
+		title:{		},
+		data: [
+		{
+			type: "pie",
+			showInLegend: false,
+			toolTipContent: "{y} - #percent %",
+			legendText: "{indexLabel}",
+			dataPoints: [
+				{  y: wins, indexLabel: "Wins" },
+				{  y: losses, indexLabel: "Losses" },
+			]
+		}
+		]
+	});
+	chart.render();
+}
+
 //A function that makes all initial variables back to their original values expect for wins and losses numbers.
 function clearEverything()
 {
@@ -70,12 +96,17 @@ function clearEverything()
 	ohno.currentTime = 0;
 	document.body.style.background = 'white'
 	document.body.style.color = 'black';
+	jumbotron[0].style.background = '#70a6ff';
+	changeGuessesLook.style.fontSize = "30px";
+	changeGuessesLook.style.color = "black";
 }
 
 
 //The initiation of the game
 function startGame(numberOfWins, numberOfLosses)
 {
+
+	makePie()
 	//Picking a word at random from the word bank.
 	var index = Math.floor(Math.random() * words.length);
 	wordToGuess = words[index];
@@ -170,8 +201,11 @@ document.onkeyup = function(event)
 				ohno.play()
 				document.body.style.background = 'black';
 				document.body.style.color = 'white';
+				jumbotron[0].style.background = 'red';
 				jumbotronText[0].style.color = 'black';
 				jumbotronText[1].style.color = 'black';
+				changeGuessesLook.style.fontSize = "100px";
+				changeGuessesLook.style.color = "red";
 			}
 		}
 	}

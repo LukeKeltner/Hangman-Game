@@ -239,7 +239,7 @@ function clearEverything()
 //The initiation of the game
 function startGame(numberOfWins, numberOfLosses)
 {
-	write('test', wordToGuess, false); //Showing the word the computer picked for debugging purposes.---------------------
+	//write('test', wordToGuess, false); //Showing the word the computer picked for debugging purposes.---------------------
 
 	//Initailly setting the current word array to all blank letters. This is the array that will change as the user makes guesses.
 	for (var i=0; i<letters.length; i++)

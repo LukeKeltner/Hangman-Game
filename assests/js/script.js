@@ -50,15 +50,15 @@ var previousWord;
 
 //Defining wordToGuess which will be the word picked from random in the wordbank and previousWord which holds the word from the last game to display.
 
-function initialVariables()
+function setInitialVariables()
 {
 	correctLettersGuessed = 0;
 	currentWord = [];
 	guesses = 12;
-	guessedLetters = []
+	guessedLetters = [];
 }
 
-//This is a function that just makes it easier to write things to the document.  The "join" boolean is there to print arrays without commas.
+//This is a function that just makes it easier to write things to the document.  The "join" boolean is there to print arrays without commas when needed.
 function write(id, content, join)
 {
 	if (join)
@@ -83,7 +83,7 @@ function makePie()
 	var chart = new CanvasJS.Chart("chartContainer",
 	{
 		backgroundColor: null,
-		theme: "theme1",
+		theme: "theme2",
 		title:{
 			text:''
 		    },
@@ -94,8 +94,8 @@ function makePie()
 			toolTipContent: "{y} - #percent %",
 			legendText: "{indexLabel}",
 			dataPoints: [
-				{  y: totalLettersCorrect, indexLabel: "Guessed Correctly" },
-				{  y: totalLettersWrong, indexLabel: "Guessed Incorrectly" },
+				{  y: totalLettersCorrect, indexLabel: "# Letters Right" },
+				{  y: totalLettersWrong, indexLabel: "# Letters Wrong" },
 			]
 		}
 		]
@@ -103,10 +103,60 @@ function makePie()
 	chart.render();
 }
 
+function makeBarGraph()
+{
+	var chart = new CanvasJS.Chart("barGraph",
+    {
+    	backgroundColor: null,
+
+	    title:
+	    {
+	      text:''
+	    },
+
+	    axisY:
+	    {
+	        tickLength: null,
+	        tickColor: 'white' ,
+	        tickThickness: null,
+	        gridColor: null,
+	        minimum: 0,
+	        maximum: 15,
+      	},
+
+	      data: [
+
+	      {
+	        dataPoints: [
+	        { x: 1, y: guesses, label: "Guesses"},
+	        { x: 2, y: wins,  label: "Wins" },
+	        { x: 3, y: losses,  label: "Losses"},
+	        ]
+	      }
+	      ]
+	    });
+
+	   chart.render();
+}
+
+//"Danger" effects that happen when user had 3 or less guesses left
+function danger()
+{
+	ohno.play()
+	document.body.style.background = 'black';
+	document.body.style.color = 'white';
+	jumbotron[0].style.background = 'red';
+	jumbotronText[0].style.color = 'black';
+	jumbotronText[1].style.color = 'black';
+	changeGuessesLook.style.fontSize = "100px";
+	changeGuessesLook.style.color = "red";
+}
+
 //A function that makes all initial variables back to their original values expect for wins and losses numbers and total letters guessed correctly and incorrectly.
 function clearEverything()
 {
-	initialVariables();
+	setInitialVariables();
+	makeBarGraph()
 	previousWord = wordToGuess;
 	write('previousWord', previousWord, false);
 	write('userGuesses', "", false);
@@ -126,7 +176,7 @@ function startGame(numberOfWins, numberOfLosses)
 	//Picking a word at random from the word bank.
 	var index = Math.floor(Math.random() * words.length);
 	wordToGuess = words[index];
-	//write('test', wordToGuess, false); //Showing the word the computer picked for debugging purposes.
+	write('test', wordToGuess, false); //Showing the word the computer picked for debugging purposes.---------------------
 
 	//Splitting up the word into its individual letters - letters is an array of letters.
 	letters = wordToGuess.split("");
@@ -144,7 +194,8 @@ function startGame(numberOfWins, numberOfLosses)
 	write('losses', numberOfLosses, false);
 }
 
-initialVariables();
+setInitialVariables();
+makeBarGraph()
 startGame(0, 0);
 
 //The events that occur when the User presses a key.
@@ -153,7 +204,7 @@ document.onkeyup = function(event)
 	//Setting the pressed key to lowercase just for consistency.
 	var guessedLetter = event.key.toLowerCase();
 
-	//We assume that the users guessed letter has not already been guessed
+	//We assume that the user's guessed letter has not already been guessed
 	alreadyGuessed = false;
 
 	//This loop goes through all letters that have been already guessed.
@@ -169,7 +220,7 @@ document.onkeyup = function(event)
 
 	//If the previous loop did not set alreadyGuessed to true, that means the user has yet to guess it 
 	//so we now put it in the guessedLetters array and also print it to the document as a guessed letter
-	if(alreadyGuessed == false)
+	if (alreadyGuessed == false)
 	{
 		guessedLetters.push(guessedLetter);
 		var userGuesses = document.getElementById("userGuesses").innerHTML;
@@ -206,6 +257,7 @@ document.onkeyup = function(event)
 		if (alreadyGuessed==false)
 		{
 			guesses = guesses - 1;
+			makeBarGraph()
 			totalLettersWrong = totalLettersWrong + 1;
 			makePie()
 			write('guesses', guesses, false);
@@ -219,14 +271,7 @@ document.onkeyup = function(event)
 			//Suspense if you have three or less guesses!
 			if (guesses == 3)
 			{
-				ohno.play()
-				document.body.style.background = 'black';
-				document.body.style.color = 'white';
-				jumbotron[0].style.background = 'red';
-				jumbotronText[0].style.color = 'black';
-				jumbotronText[1].style.color = 'black';
-				changeGuessesLook.style.fontSize = "100px";
-				changeGuessesLook.style.color = "red";
+				danger();
 			}
 		}
 	}
@@ -235,16 +280,26 @@ document.onkeyup = function(event)
 	if (correctLettersGuessed == letters.length)
 	{
 		wins = wins + 1;
+		makeBarGraph()
 		write('wins', wins, false);
+		ohno.pause()
+		ohno.currentTime = 0;
 		youwin.play()
-		clearEverything();
-		startGame(wins, losses);
+		jumbotron[0].style.background = '#6aff00';
+
+		//Make the jumbotron green for 1.5 seconds
+		setTimeout(function ()
+		{
+			clearEverything();
+			startGame(wins, losses);
+		}, 1500);
 	}
 
 	//If the user is out of guesses we had one to the losses total and reset the game.
 	if (guesses == 0)
 	{
 		losses = losses + 1;
+		makeBarGraph()
 		write('losses', losses, false);
 		youlose.play()
 		clearEverything();

@@ -22,7 +22,7 @@
 //wordToGuess: the  word picked randomly from the word bank "words"
 //uniqueLetters: an array of the letters in the word to guess minus dupilcate letters
 //previousWord: the previous word the user was trying to guess last time
-//winOrLost: a boolean value. When "false" the user can play, when "true" the .onkeyup function won't run
+//freeze: a boolean value. When "false" the user can play, when "true" the .onkeyup function won't run
 //inTheRed: a boolean value to let the program know if the user is "in the red" - (down to 3 or less guesses)
 var totalLettersCorrect = 0;
 var totalLettersWrong = 0;
@@ -50,7 +50,7 @@ var letters;
 var wordToGuess;
 var uniqueLetters;
 var previousWord;
-var winOrLost;
+var freeze;
 var inTheRed;
 
 //Defining wordToGuess which will be the word picked from random in the wordbank and previousWord which holds the word from the last game to display.
@@ -58,14 +58,14 @@ function changeTheHeader(array)
 {
 	var index = Math.floor(Math.random() * goodJob.length);
 	var randomSaying = array[index]
-	winOrLost = true;
+	freeze = true;
 	write('talkToTheUser', randomSaying, false);
 
 	if (inTheRed)
 	{
 		setTimeout(function ()
 		{
-			winOrLost = false;
+			freeze = false;
 			jumbotron[0].style.background = 'red';
 			write('talkToTheUser', 'Guess the Word', false);
 		}, 500);
@@ -75,7 +75,7 @@ function changeTheHeader(array)
 	{
 		setTimeout(function ()
 		{
-			winOrLost = false;
+			freeze = false;
 			write('talkToTheUser', 'Guess the Word', false);
 		}, 500);
 	}
@@ -115,6 +115,8 @@ function getNewWord()
 			uniqueLetters.push(letters[i]);
 		}
 	}
+
+	 console.log(uniqueLetters)
 }
 
 function setInitialVariables()
@@ -166,12 +168,12 @@ function makePie()
 function alreadyGuessedOrNotALetter(string)
 {
 	knock.play()
-	winOrLost = true;
+	freeze = true;
 	jumbotron[0].style.background = '#c37fff';
 	write('talkToTheUser', string, false);
 	setTimeout(function ()
 	{
-		winOrLost = false;
+		freeze = false;
 		if (inTheRed)
 		{
 			jumbotron[0].style.background = 'red';
@@ -204,10 +206,10 @@ function danger()
 function clearEverything()
 {
 	inTheRed = false;
-	winOrLost = false;
+	freeze = false;
 	previousWord = wordToGuess;
 	getNewWord();
-	setInitialVariables
+	setInitialVariables()
 	write('previousWord', 'Previous word: '+previousWord, false);
 	write('userGuesses', "", false);
 	ohno.pause()
@@ -243,7 +245,7 @@ startGame(0, 0);
 //The events that occur when the User presses a key.
 document.onkeyup = function(event)
 {
-	if(!winOrLost)
+	if(!freeze)
 	{
 		if (event.keyCode >= 65 && event.keyCode <= 90) 
 		{
@@ -354,12 +356,12 @@ document.onkeyup = function(event)
 				youwin.play()
 
 				//Make the jumbotron green for 1.5 seconds before resetting the game.
-				winOrLost = true;
+				freeze = true;
 				jumbotron[0].style.background = '#6aff00';
 				write('talkToTheUser', 'You Won!', false);
 				setTimeout(function ()
 				{
-					winOrLost = false;
+					freeze = false;
 					write('talkToTheUser', 'Guess the Word', false);
 					clearEverything();
 					startGame(wins, losses);
@@ -376,12 +378,12 @@ document.onkeyup = function(event)
 				youlose.play()
 
 				//Make the jumbotron gray for 1.5 seconds before resetting the game.
-				winOrLost = true;
+				freeze = true;
 				jumbotron[0].style.background = '#636363';
 				write('talkToTheUser', 'You Lost', false);
 				setTimeout(function ()
 				{
-					winOrLost = false;
+					freeze = false;
 					write('talkToTheUser', 'Guess the Word', false);
 					clearEverything();
 					startGame(wins, losses);

@@ -1,14 +1,39 @@
 //Decalring and setting up the initial variables.
+//totalLettersCorrect: One is added every time the user guesses a letter correctly
+//totalLettersWrong: One is added every time the user guesses a letter incorrectly
+//wins and losses: keep track of how many times the user has won or lost a game
+//correct: audio for guessing a letter correctly
+//youwin: ausio for winning
+//youlose: audio for losing
+//ohno: audio for when the user is "inTheRed"
+//knock: audio for when the user has guessed a letter for the second (or more) times
+//jumbotron: used to change background color
+//jumbotronText: the text inside the jumb otron - it changes colors differently than the body text
+//changeGuessesLook: this changes the guesses font-size to large and color to red when "inTheRed"
+//talkToTheUser: The main text above the word the user is trying to guess.  This changes a lot.
+//words: the word bank
+//goodJob: random "good job" sayings that pop up when a letter is guesssed correctly
+//badJob: random "bad job" sayings that pop up when a letter is guesssed incorrectly
+//correctLettersGuessed: every time the user guesses a letter correctly, one is added (or two if the letter apeared twice, etc.).  The condition to win the game is when this value equals the length of the array letters.
+//currentWord: This is the array that gets updated as the user guesses words correctly.  Initially all elements are "_"
+//guesses: how many guesses you get before you lose.
+//guessedLetters: an array of all letters the user has guessed.
+//letters: an array of the letters of the word the user is trying to guess
+//wordToGuess: the  word picked randomly from the word bank "words"
+//uniqueLetters: an array of the letters in the word to guess minus dupilcate letters
+//previousWord: the previous word the user was trying to guess last time
+//winOrLost: a boolean value. When "false" the user can play, when "true" the .onkeyup function won't run
+//inTheRed: a boolean value to let the program know if the user is "in the red" - (down to 3 or less guesses)
 var totalLettersCorrect = 0;
 var totalLettersWrong = 0;
 var wins = 0;
 var losses = 0;
-var correct = new Audio('correct.wav');
-var wrong = new Audio('wrong.wav')
-var youwin = new Audio('youwin.wav')
-var youlose = new Audio('youlose.wav')
-var ohno = new Audio('ohno.wav')
-var knock = new Audio('knock.wav')
+var correct = new Audio('correct.mp3');
+var wrong = new Audio('wrong.mp3')
+var youwin = new Audio('youwin.mp3')
+var youlose = new Audio('youlose.mp3')
+var ohno = new Audio('ohno.mp3')
+var knock = new Audio('knock.mp3')
 var jumbotron = document.getElementsByClassName('jumbotron');
 var jumbotronText = document.getElementsByClassName('changeColor');
 var changeGuessesLook = document.getElementById('guesses');
@@ -28,43 +53,19 @@ var previousWord;
 var winOrLost;
 var inTheRed;
 
-
-
-//Word bank where a word will be chosen at random.
-
-//We're setting up a boolean correctLettersGuessed to keep track of when/if the users wins.
-//The user wins when correctLettersGuessed = letters.length.
-
-
-//This will be an array of the letters in the word that is to be guessed.
-
-
-//How many guesses you get before you lose.
-
-
-//You start with 0 wins
-
-
-//You start with 0 losses
-
-
-//An array to keep track of what letters you have guessed
-
-
-//An array of the letters of the word that is to be guessed.  
-
-
 //Defining wordToGuess which will be the word picked from random in the wordbank and previousWord which holds the word from the last game to display.
 function changeTheHeader(array)
 {
 	var index = Math.floor(Math.random() * goodJob.length);
 	var randomSaying = array[index]
+	winOrLost = true;
 	write('talkToTheUser', randomSaying, false);
 
 	if (inTheRed)
 	{
 		setTimeout(function ()
 		{
+			winOrLost = false;
 			jumbotron[0].style.background = 'red';
 			write('talkToTheUser', 'Guess the Word', false);
 		}, 500);
@@ -74,10 +75,10 @@ function changeTheHeader(array)
 	{
 		setTimeout(function ()
 		{
+			winOrLost = false;
 			write('talkToTheUser', 'Guess the Word', false);
 		}, 500);
 	}
-
 }
 
 function getNewWord()
@@ -114,8 +115,6 @@ function getNewWord()
 			uniqueLetters.push(letters[i]);
 		}
 	}
-
-	 console.log(uniqueLetters)
 }
 
 function setInitialVariables()
@@ -164,42 +163,28 @@ function makePie()
 	chart.render();
 }
 
-//I included a bar graph for Guesses, Wins, and Losses.  I opted to remove it because it looked clunky and didn't provide anything really haha
-/*function makeBarGraph()
+function alreadyGuessedOrNotALetter(string)
 {
-	var chart = new CanvasJS.Chart("barGraph",
-    {
-    	backgroundColor: null,
+	knock.play()
+	winOrLost = true;
+	jumbotron[0].style.background = '#c37fff';
+	write('talkToTheUser', string, false);
+	setTimeout(function ()
+	{
+		winOrLost = false;
+		if (inTheRed)
+		{
+			jumbotron[0].style.background = 'red';
+		}
 
-	    title:
-	    {
-	      text:''
-	    },
+		else
+		{
+			jumbotron[0].style.background = '#70a6ff';
+		}
 
-	    axisY:
-	    {
-	        tickLength: null,
-	        tickColor: 'white' ,
-	        tickThickness: null,
-	        gridColor: null,
-	        minimum: 0,
-	        maximum: 15,
-      	},
-
-	      data: [
-
-	      {
-	        dataPoints: [
-	        { x: 1, y: guesses, label: "Guesses"},
-	        { x: 2, y: wins,  label: "Wins" },
-	        { x: 3, y: losses,  label: "Losses"},
-	        ]
-	      }
-	      ]
-	    });
-
-	   chart.render();
-}*/
+		write('talkToTheUser', 'Guess the Word', false);
+	}, 500);
+}
 
 //"Danger" effects that happen when user has 3 or less guesses left
 function danger()
@@ -222,8 +207,7 @@ function clearEverything()
 	winOrLost = false;
 	previousWord = wordToGuess;
 	getNewWord();
-	setInitialVariables();
-	//makeBarGraph()
+	setInitialVariables
 	write('previousWord', 'Previous word: '+previousWord, false);
 	write('userGuesses', "", false);
 	ohno.pause()
@@ -239,8 +223,6 @@ function clearEverything()
 //The initiation of the game
 function startGame(numberOfWins, numberOfLosses)
 {
-	//write('test', wordToGuess, false); //Showing the word the computer picked for debugging purposes.---------------------
-
 	//Initailly setting the current word array to all blank letters. This is the array that will change as the user makes guesses.
 	for (var i=0; i<letters.length; i++)
 	{
@@ -256,7 +238,6 @@ function startGame(numberOfWins, numberOfLosses)
 
 getNewWord();
 setInitialVariables();
-//makeBarGraph()
 startGame(0, 0);
 
 //The events that occur when the User presses a key.
@@ -264,166 +245,153 @@ document.onkeyup = function(event)
 {
 	if(!winOrLost)
 	{
-		//Setting the pressed key to lowercase just for consistency.
-		var guessedLetter = event.key.toLowerCase();
-
-		//We assume that the user's guessed letter has not already been guessed
-		alreadyGuessed = false;
-
-		//This loop goes through all letters that have been already guessed.
-		for (var i=0; i<guessedLetters.length; i++)
+		if (event.keyCode >= 65 && event.keyCode <= 90) 
 		{
-			//If the user's letter has already been guessed, we set the alreadyGuessed Boolean to true.
-			if (guessedLetter === guessedLetters[i])
-			{
-				alreadyGuessed = true;
-				knock.play()
 
-				jumbotron[0].style.background = '#c37fff';
-				write('talkToTheUser', 'Already Guessed', false);
+			//Setting the pressed key to lowercase just for consistency.
+			var guessedLetter = event.key.toLowerCase();
+
+			//We assume that the user's guessed letter has not already been guessed
+			alreadyGuessed = false;
+
+			//This loop goes through all letters that have been already guessed.
+			for (var i=0; i<guessedLetters.length; i++)
+			{
+				//If the user's letter has already been guessed, we set the alreadyGuessed Boolean to true.
+				if (guessedLetter === guessedLetters[i])
+				{
+					alreadyGuessed = true;
+					alreadyGuessedOrNotALetter("Already Guessed")
+					break;
+				}
+			}
+
+			//If the previous loop did not set alreadyGuessed to true, that means the user has yet to guess it 
+			//so we now put it in the guessedLetters array and also print it to the document as a guessed letter
+			if (alreadyGuessed == false)
+			{
+				guessedLetters.push(guessedLetter);
+				var userGuesses = document.getElementById("userGuesses").innerHTML;
+				var updatedUserGuesses = userGuesses.concat(' '+guessedLetter);
+				write('userGuesses', updatedUserGuesses, false);
+			}
+
+			//We now assume that the letter the user guessed is an incorrect letter
+			var correctGuess = false;
+
+			//Here we set up a Boolean to keep track if this is the first time the loop below sees a given letter
+			var firstTimeSeeingLetter = true;
+
+			//This loop looks through all letters of the word that is to be guessed.
+			for (var i=0; i<letters.length; i++)	
+		 	{
+
+		 		//If the user guessed a letter correctly, we set the boolean correctGuess to true and replace the blank space in currentWord
+		 		//with the letter that was guessed.  This loop will go through all letters in the word so it will print duplicates if
+		 		//there are any.  It must also be true that the user must not have already guessed this correct letter.
+				if (guessedLetter == letters[i] && alreadyGuessed == false)
+				{
+					correctGuess = true;
+					currentWord.splice(i, 1, guessedLetter);
+					write('currentWord', currentWord, true);
+					correctLettersGuessed = correctLettersGuessed + 1;
+					correct.play();
+					if (correctLettersGuessed !== letters.length)
+					{
+						changeTheHeader(goodJob);
+					}
+
+					//If this is the first time this letter has appeared in the word, we add one to our TotalLettersCorrect variable.
+					//I put this in because, for instance, if the word was "book" and you pressed "o" it would think that you guessed
+					//"o" correctly twice, but I don't want that.  I just want to know if you guessed correctly or not...no double ocunting.  
+					if (firstTimeSeeingLetter)
+					{
+						totalLettersCorrect = totalLettersCorrect + 1;
+						makePie();
+						firstTimeSeeingLetter = false;
+					}
+				}
+			}
+
+			//If the user guessed incorrectly...
+			if (correctGuess==false)
+			{
+				//...and also has not guessed this letter before, we subtract one from the guess total and write to the document.
+				if (alreadyGuessed==false)
+				{
+					guesses = guesses - 1;
+					if (guesses !== 0)
+					{
+						changeTheHeader(badJob);
+					}
+
+					totalLettersWrong = totalLettersWrong + 1;
+					makePie()
+					write('guesses', guesses, false);
+
+					//We don't want the wrong sound to play overtop the you lose sound (it sounds awful)
+					if (guesses != 0)
+					{
+						wrong.play()
+					}
+
+					//Suspense if you have three or less guesses!
+					if (guesses == 3)
+					{
+						inTheRed = true;
+						danger();
+					}
+				}
+			}
+
+			//If the user has guessed all the correct letters we add one to the wins total and reset the game.
+			if (correctLettersGuessed == letters.length)
+			{
+				wins = wins + 1;
+				write('wins', wins, false);
+				ohno.pause()
+				ohno.currentTime = 0;
+				youwin.play()
+
+				//Make the jumbotron green for 1.5 seconds before resetting the game.
+				winOrLost = true;
+				jumbotron[0].style.background = '#6aff00';
+				write('talkToTheUser', 'You Won!', false);
 				setTimeout(function ()
 				{
-					if (inTheRed)
-					{
-						jumbotron[0].style.background = 'red';
-					}
-
-					else
-					{
-						jumbotron[0].style.background = '#70a6ff';
-					}
-
+					winOrLost = false;
 					write('talkToTheUser', 'Guess the Word', false);
-				}, 500);
+					clearEverything();
+					startGame(wins, losses);
+				}, 1500);
+			}
 
-				break;
+			//If the user is out of guesses we add one to the losses total and reset the game.
+			if (guesses == 0)
+			{
+				losses = losses + 1;
+				write('losses', losses, false);
+				ohno.pause()
+				ohno.currentTime = 0;
+				youlose.play()
+
+				//Make the jumbotron gray for 1.5 seconds before resetting the game.
+				winOrLost = true;
+				jumbotron[0].style.background = '#636363';
+				write('talkToTheUser', 'You Lost', false);
+				setTimeout(function ()
+				{
+					winOrLost = false;
+					write('talkToTheUser', 'Guess the Word', false);
+					clearEverything();
+					startGame(wins, losses);
+				}, 1500);
 			}
 		}
 
-		//If the previous loop did not set alreadyGuessed to true, that means the user has yet to guess it 
-		//so we now put it in the guessedLetters array and also print it to the document as a guessed letter
-		if (alreadyGuessed == false)
+		else
 		{
-			guessedLetters.push(guessedLetter);
-			var userGuesses = document.getElementById("userGuesses").innerHTML;
-			var updatedUserGuesses = userGuesses.concat(' '+guessedLetter);
-			write('userGuesses', updatedUserGuesses, false);
-		}
-
-		//We now assume that the letter the user guessed is an incorrect letter
-		var correctGuess = false;
-
-		//Here we set up a Boolean to keep track if this is the first time the loop below sees a given letter
-		var firstTimeSeeingLetter = true;
-
-		//This loop looks through all letters of the word that is to be guessed.
-		for (var i=0; i<letters.length; i++)	
-	 	{
-
-	 		//If the user guessed a letter correctly, we set the boolean correctGuess to true and replace the blank space in currentWord
-	 		//with the letter that was guessed.  This loop will go through all letters in the word so it will print duplicates if
-	 		//there are any.  It must also be true that the user must not have already guessed this correct letter.
-			if (guessedLetter == letters[i] && alreadyGuessed == false)
-			{
-				correctGuess = true;
-				currentWord.splice(i, 1, guessedLetter);
-				write('currentWord', currentWord, true);
-				correctLettersGuessed = correctLettersGuessed + 1;
-				correct.play();
-
-				if (correctLettersGuessed !== letters.length)
-				{
-					changeTheHeader(goodJob);
-				}
-
-				//If this is the first time this letter has appeared in the word, we add one to our TotalLettersCorrect variable.
-				//I put this in because, for instance, if the word was "book" and you pressed "o" it would think that you guessed
-				//"o" correctly twice, but I don't want that.  I just want to know if you guessed correctly or not...no double ocunting.  
-				if (firstTimeSeeingLetter)
-				{
-					totalLettersCorrect = totalLettersCorrect + 1;
-					makePie();
-					firstTimeSeeingLetter = false;
-				}
-			}
-		}
-
-		//If the user guessed incorrectly...
-		if (correctGuess==false)
-		{
-			//...and also has not guessed this letter before, we subtract one from the guess total and write to the document.
-			if (alreadyGuessed==false)
-			{
-				guesses = guesses - 1;
-				//makeBarGraph()
-				if (guesses !== 0)
-				{
-					changeTheHeader(badJob);
-				}
-
-				totalLettersWrong = totalLettersWrong + 1;
-				makePie()
-				write('guesses', guesses, false);
-
-				//We don't want the wrong sound to play overtop the you lose sound (it sounds awful)
-				if (guesses != 0)
-				{
-					wrong.play()
-				}
-
-				//Suspense if you have three or less guesses!
-				if (guesses == 3)
-				{
-					inTheRed = true;
-					danger();
-				}
-			}
-		}
-
-		//If the user has guessed all the correct letters we had one to the wins total and reset the game.
-		if (correctLettersGuessed == letters.length)
-		{
-			wins = wins + 1;
-			//makeBarGraph()
-			write('wins', wins, false);
-			ohno.pause()
-			ohno.currentTime = 0;
-			youwin.play()
-
-			//Make the jumbotron green for 1.5 seconds before resetting the game.
-			winOrLost = true;
-			jumbotron[0].style.background = '#6aff00';
-			write('talkToTheUser', 'You Won!', false);
-			setTimeout(function ()
-			{
-				winOrLost = false;
-				write('talkToTheUser', 'Guess the Word', false);
-				clearEverything();
-				startGame(wins, losses);
-			}, 1500);
-		}
-
-		//If the user is out of guesses we add one to the losses total and reset the game.
-		if (guesses == 0)
-		{
-			losses = losses + 1;
-			//makeBarGraph()
-			write('losses', losses, false);
-			ohno.pause()
-			ohno.currentTime = 0;
-			youlose.play()
-
-			//Make the jumbotron gray for 1.5 seconds before resetting the game.
-			winOrLost = true;
-			jumbotron[0].style.background = '#636363';
-			write('talkToTheUser', 'You Lost', false);
-			setTimeout(function ()
-			{
-				winOrLost = false;
-				write('talkToTheUser', 'Guess the Word', false);
-				clearEverything();
-				startGame(wins, losses);
-			}, 1500);
+			alreadyGuessedOrNotALetter("That\'s not a letter")
 		}
 	}
 }

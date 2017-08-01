@@ -32,6 +32,11 @@ body
 	font-size: 4vw;
 }
 
+/* #previousWord
+{
+	font-size: 200px;
+} */
+
 h2
 {
 	border-bottom: 1px solid gray;
